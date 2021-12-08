@@ -1,12 +1,14 @@
-﻿namespace AlterTankBackend.Models
+﻿using System;
+
+namespace AlterTankBackend.Models
 {
-    public class Station
+    public class Stations
     {
-        int id { get; set; }
-        string latitude { get; set; }
-        string longitude { get; set; }
-        string name { get; set;  }
-        string description { get; set; }
-        string lastPrice { get; set; }
+        public Guid id { get; set; }
+        public string latitude { get; set; }
+        public string longitude { get; set; }
+        public string name { get; set;  }
+        public string description { get; set; }
+        public string lastPrice { get; set; }
     }
 }

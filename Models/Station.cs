@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AlterTankBackend.Models
 {
@@ -10,5 +11,6 @@ namespace AlterTankBackend.Models
         public string name { get; set;  }
         public string description { get; set; }
         public string lastPrice { get; set; }
+        public List<Prices> prices { get; set; }
     }
 }

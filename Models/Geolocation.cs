@@ -67,8 +67,7 @@ namespace AlterTankBackend.Models
                 if (geo.MAX_LON > _MAX_LON) geo.MAX_LON -= 2d * Math.PI;
             }
             else
-            {
-                
+            {  
                 geo.MIN_LAT = Math.Max(geo.MIN_LAT, _MIN_LAT);
                 geo.MAX_LAT = Math.Min(geo.MAX_LAT, _MAX_LAT);
                 geo.MIN_LON = _MIN_LON;

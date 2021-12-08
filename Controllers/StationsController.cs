@@ -17,16 +17,11 @@ namespace AlterTankBackend.Controllers
         [HttpGet]
         public IEnumerable<List<Stations>> Get(string latitude, string longitude, string range, string fuelType, string plugType)
         {
-           
+            Geolocation geo = Geolocation.BoundingCoordinates(double.Parse(range), double.Parse(latitude), double.Parse(longitude));
             return null;
         }
 
-        [HttpGet]
-        [Route("[controller]/getBoundingCoordinates")]
-        public string getBoundingCoordinates(string latitude, string longitude, string range)
-        {
-            Geolocation geo = Geolocation.BoundingCoordinates(double.Parse(range), double.Parse(latitude), double.Parse(longitude));
-            return geo.ToString();
-        }
+
     }
 }
+

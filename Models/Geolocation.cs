@@ -35,7 +35,7 @@ namespace AlterTankBackend.Models
 
         }
 
-        private static double ConvertToRadians(double angle)
+        public static double ConvertToRadians(double angle)
         {
             return (Math.PI / 180) * angle;
         }
@@ -73,8 +73,8 @@ namespace AlterTankBackend.Models
                 geo.MIN_LON = _MIN_LON;
                 geo.MAX_LON = _MAX_LON;
             }
-            geo.min = new double[2] {Geolocation.ConvertToDegrees(geo.MIN_LAT), Geolocation.ConvertToDegrees(geo.MIN_LON) };
-            geo.max = new double[2] { Geolocation.ConvertToDegrees(geo.MAX_LAT), Geolocation.ConvertToDegrees(geo.MAX_LON) };
+            geo.min = new double[2] {geo.MIN_LAT, geo.MIN_LON };
+            geo.max = new double[2] { geo.MAX_LAT, geo.MAX_LON };
            
             return geo;
         }

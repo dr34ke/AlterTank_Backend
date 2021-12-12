@@ -15,10 +15,36 @@ namespace AlterTankBackend.Controllers
             => Context = dBContext;
 
         [HttpGet]
-        public IEnumerable<List<Stations>> Get(string latitude, string longitude, string range, string fuelType, string plugType)
+        [Route("[controller/GetInRange]")]
+        public List<Stations> GetInRange(string latitude, string longitude, string range, string fuelType, string plugType)
         {
             Geolocation geo = Geolocation.BoundingCoordinates(double.Parse(range), double.Parse(latitude), double.Parse(longitude));
-            return null;
+            List<Stations> stations = Context.Station.Where(
+                    item => item.plugs.Any(_item => _item.plugName == plugType && _item.fuel.fuelName == fuelType)
+                    &&
+                    double.Parse(item.latitude) >= geo.min[0]
+                    &&
+                    double.Parse(item.latitude) <= geo.max[0]
+                    &&
+                    double.Parse(item.longitude) >= geo.min[1]
+                    &&
+                    double.Parse(item.longitude) <= geo.max[1]
+                    &&
+                    Math.Acos(Math.Sin(Geolocation.ConvertToRadians(double.Parse(latitude))) * Math.Sin(Geolocation.ConvertToRadians(double.Parse(item.latitude))) + Math.Cos(Geolocation.ConvertToRadians(double.Parse(latitude))) * Math.Cos(Geolocation.ConvertToRadians(double.Parse(item.latitude))) * Math.Cos(Geolocation.ConvertToRadians(double.Parse(item.longitude)) - Geolocation.ConvertToRadians(double.Parse(longitude)))) <= double.Parse(range)/6371
+                ).ToList();
+            return stations;
+        }
+        [HttpGet]
+        [Route("[controller/GetAll]")]
+        public List<Stations> GetAll(string fuelType, string plugType)
+        {
+            List<Stations> stations = Context.Station.Where(
+                item => 
+                    item.plugs.Any(
+                        _item=>_item.plugName==plugType && _item.fuel.fuelName==fuelType
+                        )
+                ).ToList();
+            return stations;
         }
 
 

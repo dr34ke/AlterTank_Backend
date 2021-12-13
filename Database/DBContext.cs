@@ -8,7 +8,14 @@ namespace AlterTankBackend.Database
         public DBContext(DbContextOptions<DBContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
-            => builder.ApplyConfiguration(new Configuration());
+        {
+            builder.ApplyConfiguration(new Configuration());
+            builder.Entity<Plugs>().HasOne(prop => prop.fuel).WithMany(_prop => _prop.plugs).HasForeignKey(prop => prop.fuelId);
+            builder.Entity<Prices>().HasOne(prop => prop.Station).WithMany(_prop => _prop.prices).HasForeignKey(prop => prop.stationId);
+        }
         public DbSet<Stations> Station { get; set; }
+        public DbSet<Fuels> Fuel { get; set; }
+        public DbSet<Prices> Prices { get; set; }
+        public DbSet<Plugs> Plugs { get; set; }
     }
 }

@@ -11,8 +11,8 @@ namespace AlterTankBackend.Models
         public string name { get; set;  }
         public string description { get; set; }
         public string lastPrice { get; set; }
-        public List<Prices> prices { get; set; }
-        public List<Fuels> fuels { get; set; }
-        public List<Plugs> plugs { get; set; }
+        public virtual ICollection<Prices> prices { get; set; }
+        public virtual ICollection<Fuels> fuels { get; set; }
+        public virtual ICollection<Plugs> plugs { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace AlterTankBackend.Models
     {
         public Guid id { get; set; }
         public string fuelName { get; set; }
-        public List<Plugs> plugs { get; set; }
+        public ICollection<Plugs> plugs { get; set; }
+        public virtual ICollection<Stations> Stations { get; set; }
     }
 }

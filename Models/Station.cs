@@ -8,11 +8,12 @@ namespace AlterTankBackend.Models
         public Guid id { get; set; }
         public string latitude { get; set; }
         public string longitude { get; set; }
+        public string city { get; set; }
+        public string street { get; set; }
+        public string address { get; set; }
         public string name { get; set;  }
         public string description { get; set; }
-        public string lastPrice { get; set; }
-        public virtual ICollection<Prices> prices { get; set; }
-        public virtual ICollection<Fuels> fuels { get; set; }
-        public virtual ICollection<Plugs> plugs { get; set; }
+        public virtual ICollection<PlugsStations> plugStations { get; set; }
+        public virtual ICollection<Prices> prices { get; set; } 
     }
 }

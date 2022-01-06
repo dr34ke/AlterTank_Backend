@@ -7,14 +7,9 @@ namespace AlterTankBackend.Models
 {
     public class Geolocation
     {
-        private double radianLat;
-        private double radianLong;
+        public double radianLat;
+        public double radianLong;
         private double r;
-        private double latT;
-
-
-        private double deltaLon;
-
 
         private static double _MIN_LAT = Geolocation.ConvertToRadians(-90d);  // -PI/2
         private static double _MAX_LAT = Geolocation.ConvertToRadians(90d);   //  PI/2

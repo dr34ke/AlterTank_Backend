@@ -6,8 +6,8 @@ namespace AlterTankBackend.Models
     public class Stations
     {
         public Guid id { get; set; }
-        public string latitude { get; set; }
-        public string longitude { get; set; }
+        public double latitude { get; set; }
+        public double longitude {get; set; }
         public string city { get; set; }
         public string street { get; set; }
         public string address { get; set; }

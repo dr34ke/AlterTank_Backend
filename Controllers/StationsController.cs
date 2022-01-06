@@ -19,23 +19,22 @@ namespace AlterTankBackend.Controllers
         public List<Stations> GetInRange(string latitude, string longitude, string range, string plugType)
         {
             Geolocation geo = Geolocation.BoundingCoordinates(double.Parse(range), double.Parse(latitude), double.Parse(longitude));
-
+            
             List<Stations> stations = Context.Station.Where(
                     item =>
                     item.plugStations.Any(_item => _item.Plug.id.ToString() == plugType)
-                    && 
-                    double.Parse(item.latitude) >= geo.min[0]
                     &&
-                    double.Parse(item.latitude) <= geo.max[0]
+                    item.latitude >= geo.min[0]
                     &&
-                    double.Parse(item.longitude) >= geo.min[1]
+                    item.latitude <= geo.max[0]
                     &&
-                    double.Parse(item.longitude) <= geo.max[1]
+                    item.longitude >= geo.min[1]
                     &&
-                    Math.Acos(Math.Sin(Geolocation.ConvertToRadians(double.Parse(latitude))) * Math.Sin(Geolocation.ConvertToRadians(double.Parse(item.latitude))) + Math.Cos(Geolocation.ConvertToRadians(double.Parse(latitude))) * Math.Cos(Geolocation.ConvertToRadians(double.Parse(item.latitude))) * Math.Cos(Geolocation.ConvertToRadians(double.Parse(item.longitude)) - Geolocation.ConvertToRadians(double.Parse(longitude)))) <= double.Parse(range) / 6371
+                    item.longitude <= geo.max[1]
+                    &&
+                    Math.Acos(Math.Sin(geo.radianLat) * Math.Sin(item.latitude) + Math.Cos(geo.radianLat) * Math.Cos(item.latitude) * Math.Cos(item.longitude - geo.radianLong)) <= (double.Parse(range) / 6371)
                 ).ToList();
             return stations;
-            return new List<Stations>();
         }
         [HttpGet]
         [Route("[controller]/GetAll")]
@@ -48,13 +47,14 @@ namespace AlterTankBackend.Controllers
                         )
                 ).ToList();
             return stations; 
-            return new List<Stations>();
         }
         [HttpPut]
         [Route("[controller]/AddNewStation")]
         public IActionResult AddNewStation(Stations stations)
         {
             Context.Add<Stations>(stations);
+            stations.latitude = Geolocation.ConvertToRadians(stations.latitude);
+            stations.longitude = Geolocation.ConvertToRadians(stations.longitude);
             Context.SaveChanges();
             return Ok(stations.id);
         }

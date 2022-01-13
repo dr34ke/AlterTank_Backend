@@ -16,8 +16,11 @@ namespace AlterTankBackend.Controllers
 
         [HttpGet]
         [Route("[controller]/GetInRange")]
-        public List<Stations> GetInRange(string latitude, string longitude, string range, string plugType)
+        public List<StationsWithPrice> GetInRange(string latitude, string longitude, string range, string plugType)
         {
+            latitude=latitude.Replace(".", ",");
+            longitude=longitude.Replace(".", ",");
+            range = range.Replace(".", ",");
             Geolocation geo = Geolocation.BoundingCoordinates(double.Parse(range), double.Parse(latitude), double.Parse(longitude));
             
             List<Stations> stations = Context.Station.Where(
@@ -34,11 +37,28 @@ namespace AlterTankBackend.Controllers
                     &&
                     Math.Acos(Math.Sin(geo.radianLat) * Math.Sin(item.latitude) + Math.Cos(geo.radianLat) * Math.Cos(item.latitude) * Math.Cos(item.longitude - geo.radianLong)) <= (double.Parse(range) / 6371)
                 ).ToList();
-            return stations;
+
+            Plugs plug = Context.Plugs.Where(_item => _item.id == Int32.Parse(plugType)).FirstOrDefault();
+            List<StationsWithPrice> _stations = new List<StationsWithPrice>(); 
+            foreach (Stations stations1 in stations)
+            {
+                var lastPrice = Context.Prices.Where(_item => _item.fuelId == plug.fuelId && _item.stationId == stations1.id).OrderByDescending(item => item.date).FirstOrDefault();
+                if (lastPrice != null)
+                {
+                    StationsWithPrice stationsWithPrice = new StationsWithPrice(stations1, lastPrice.price.ToString());
+                    _stations.Add(stationsWithPrice);
+                }
+                else {
+                    StationsWithPrice stationsWithPrice = new StationsWithPrice(stations1);
+                    _stations.Add(stationsWithPrice);
+                }
+            }
+
+            return _stations;
         }
         [HttpGet]
         [Route("[controller]/GetAll")]
-        public List<Stations> GetAll(string plugType)
+        public List<StationsWithPrice> GetAll(string plugType)
         {
             List<Stations> stations = Context.Station.Where(
                 item =>
@@ -46,7 +66,23 @@ namespace AlterTankBackend.Controllers
                         _item => _item.Plug.id.ToString() == plugType
                         )
                 ).ToList();
-            return stations; 
+            Plugs plug = Context.Plugs.Where(_item => _item.id == Int32.Parse(plugType)).FirstOrDefault();
+            List<StationsWithPrice> _stations = new List<StationsWithPrice>();
+            foreach (Stations stations1 in stations)
+            {
+                var lastPrice = Context.Prices.Where(_item => _item.fuelId == plug.fuelId && _item.stationId == stations1.id).OrderByDescending(item => item.date).FirstOrDefault();
+                if (lastPrice != null)
+                {
+                    StationsWithPrice stationsWithPrice = new StationsWithPrice(stations1, lastPrice.price.ToString());
+                    _stations.Add(stationsWithPrice);
+                }
+                else
+                {
+                    StationsWithPrice stationsWithPrice = new StationsWithPrice(stations1);
+                    _stations.Add(stationsWithPrice);
+                }
+            }
+            return _stations; 
         }
         [HttpPut]
         [Route("[controller]/AddNewStation")]
@@ -81,6 +117,22 @@ namespace AlterTankBackend.Controllers
             return Ok();
         }
 
+
+        [HttpPut]
+        [Route("[controller]/AddPrice")]
+        public IActionResult AddPrice(Guid StationId, int FuelId, float PricePerUnit, DateTime Date)
+        {
+            Prices price = new Prices(){ 
+                date=Date,
+                fuelId=FuelId,
+                price=PricePerUnit,
+                stationId=StationId,
+            };
+
+            Context.Prices.Add(price);
+            Context.SaveChanges();
+            return Ok();
+        }
 
 
 

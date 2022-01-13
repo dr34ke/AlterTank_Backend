@@ -16,4 +16,33 @@ namespace AlterTankBackend.Models
         public virtual ICollection<PlugsStations> plugStations { get; set; }
         public virtual ICollection<Prices> prices { get; set; } 
     }
+    public class StationsWithPrice :Stations
+    {
+        public StationsWithPrice(Stations station, string price)
+        {
+            this.lastPrice = price;
+            this.latitude = Geolocation.ConvertToDegrees(station.latitude);
+            this.longitude = Geolocation.ConvertToDegrees(station.longitude);
+            this.description = station.description;
+            this.city = station.city;
+            this.street = station.street;
+            this.name = station.name;
+            this.address = station.address;
+            this.id = station.id;
+        }
+
+        public StationsWithPrice(Stations station)
+        {
+            this.latitude = Geolocation.ConvertToDegrees(station.latitude);
+            this.longitude = Geolocation.ConvertToDegrees(station.longitude);
+            this.description = station.description;
+            this.city = station.city;
+            this.street = station.street;
+            this.name = station.name;
+            this.address = station.address;
+            this.id = station.id;
+        }
+
+        public string lastPrice { get; set; }
+    }
 }

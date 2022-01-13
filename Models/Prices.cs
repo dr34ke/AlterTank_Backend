@@ -10,7 +10,8 @@ namespace AlterTankBackend.Models
         public Guid id { get; set; }
         public DateTime date { get; set; }
         public float price { get; set; }
-        public Plugs Plug { get; set; }
+        public Fuels fuel { get; set; }
+        public int fuelId { get; set; }
         public Stations Station { get; set; }
         public Guid stationId { get; set; }
     }

@@ -21,25 +21,15 @@ namespace AlterTankBackend.Controllers
             latitude=latitude.Replace(".", ",");
             longitude=longitude.Replace(".", ",");
             range = range.Replace(".", ",");
-            Geolocation geo = Geolocation.BoundingCoordinates(double.Parse(range), double.Parse(latitude), double.Parse(longitude));
-            
+            Geolocation geo = Geolocation.BoundingCoordinates(double.Parse(range), double.Parse(latitude), double.Parse(longitude));     
             List<Stations> stations = Context.Station.Where(
                     item =>
-                    item.plugStations.Any(_item => _item.Plug.id.ToString() == plugType)
-                    &&
-                    item.latitude >= geo.min[0]
-                    &&
-                    item.latitude <= geo.max[0]
-                    &&
-                    item.longitude >= geo.min[1]
-                    &&
-                    item.longitude <= geo.max[1]
-                    &&
+                    item.plugStations.Any(_item => _item.Plug.id.ToString() == plugType)&&
+                    item.latitude >= geo.min[0]&&item.latitude <= geo.max[0]&&item.longitude >= geo.min[1]&&item.longitude <= geo.max[1]&&
                     Math.Acos(
                         Math.Sin(geo.radianLat) * Math.Sin(item.latitude) + Math.Cos(geo.radianLat) * Math.Cos(item.latitude) * Math.Cos(item.longitude - geo.radianLong)
                         ) <= (double.Parse(range) / 6371)
                 ).ToList();
-
             Plugs plug = Context.Plugs.Where(_item => _item.id == Int32.Parse(plugType)).FirstOrDefault();
             List<StationsWithPrice> _stations = new List<StationsWithPrice>(); 
             foreach (Stations stations1 in stations)
@@ -57,7 +47,6 @@ namespace AlterTankBackend.Controllers
                     _stations.Add(stationsWithPrice);
                 }
             }
-
             return _stations;
         }
         [HttpGet]

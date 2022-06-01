@@ -35,14 +35,18 @@ namespace AlterTankBackend.Controllers
                     &&
                     item.longitude <= geo.max[1]
                     &&
-                    Math.Acos(Math.Sin(geo.radianLat) * Math.Sin(item.latitude) + Math.Cos(geo.radianLat) * Math.Cos(item.latitude) * Math.Cos(item.longitude - geo.radianLong)) <= (double.Parse(range) / 6371)
+                    Math.Acos(
+                        Math.Sin(geo.radianLat) * Math.Sin(item.latitude) + Math.Cos(geo.radianLat) * Math.Cos(item.latitude) * Math.Cos(item.longitude - geo.radianLong)
+                        ) <= (double.Parse(range) / 6371)
                 ).ToList();
 
             Plugs plug = Context.Plugs.Where(_item => _item.id == Int32.Parse(plugType)).FirstOrDefault();
             List<StationsWithPrice> _stations = new List<StationsWithPrice>(); 
             foreach (Stations stations1 in stations)
             {
-                var lastPrice = Context.Prices.Where(_item => _item.fuelId == plug.fuelId && _item.stationId == stations1.id).OrderByDescending(item => item.date).FirstOrDefault();
+                var lastPrice = Context.Prices.Where(
+                    _item => _item.fuelId == plug.fuelId && _item.stationId == stations1.id
+                    ).OrderByDescending(item => item.date).FirstOrDefault();
                 if (lastPrice != null)
                 {
                     StationsWithPrice stationsWithPrice = new StationsWithPrice(stations1, lastPrice.price.ToString());

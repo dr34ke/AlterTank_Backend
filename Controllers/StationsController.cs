@@ -63,7 +63,9 @@ namespace AlterTankBackend.Controllers
             List<StationsWithPrice> _stations = new List<StationsWithPrice>();
             foreach (Stations stations1 in stations)
             {
-                var lastPrice = Context.Prices.Where(_item => _item.fuelId == plug.fuelId && _item.stationId == stations1.id).OrderByDescending(item => item.date).FirstOrDefault();
+                var lastPrice = Context.Prices.Where(
+                    _item => _item.fuelId == plug.fuelId && _item.stationId == stations1.id
+                    ).OrderByDescending(item => item.date).FirstOrDefault();
                 if (lastPrice != null)
                 {
                     StationsWithPrice stationsWithPrice = new StationsWithPrice(stations1, lastPrice.price.ToString());
@@ -121,7 +123,6 @@ namespace AlterTankBackend.Controllers
                 price=PricePerUnit,
                 stationId=StationId,
             };
-
             Context.Prices.Add(price);
             Context.SaveChanges();
             return Ok();
